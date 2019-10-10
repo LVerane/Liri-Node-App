@@ -1,4 +1,5 @@
 require("dotenv").config();
+var fs = require('fs');
 var keys = require("./keys.js");
 
 var Spotify = require('node-spotify-api');
@@ -11,39 +12,52 @@ var moment = require('moment');
 var userRequest = process.argv[2];
 var userSearch = process.argv.slice(3).join("+");
 
-//for bands in town
-var userArtistName = [];
-for (var i = 3; i < process.argv.length; i++) {
-    userArtistName[i - 3] = process.argv[i].charAt(0).toUpperCase() + process.argv[i].slice(1);
+var artistName = [];
+var userArtistName;
+var resultArtistName;
+function fixName() {
+    userArtistName = userSearch.split("+")
+    for (var i = 0; i < userArtistName.length; i++) {
+        artistName[i] = userArtistName[i].charAt(0).toUpperCase() + userArtistName[i].slice(1);
+    }
+    resultArtistName = artistName.join(" ");
+    console.log(resultArtistName)
 }
-var resultArtistName = userArtistName.join(" ");
+
+//
 
 console.log("------------------------------------------")
 
-switch (userRequest) {
-    case "concert-this":
-        concert();
-        break;
+baseSwitch();
 
-    case "spotify-this-song":
-        spotifySong();
-        break;
+function baseSwitch() {
+    switch (userRequest) {
+        case "concert-this":
+            concert();
+            break;
 
-    case "movie-this":
-        movie();
-        break;
+        case "spotify-this-song":
+            spotifySong();
+            break;
 
-    case "do-what-it-says":
-        random();
-        break;
+        case "movie-this":
+            movie();
+            break;
 
-    default:
-        console.log("This is not an artsy thing")
-        break;
+        case "do-what-it-says":
+            random();
+            break;
+
+        default:
+            console.log("This is not an artsy thing")
+            break;
+    }
 }
 
 function concert() {
+    fixName();
     var queryUrl = "https://rest.bandsintown.com/artists/" + userSearch + "/events?app_id=codingbootcamp"
+    console.log(queryUrl)
     axios.get(queryUrl).then(
         function (response) {
             // console.log(response.data[1])
@@ -66,6 +80,7 @@ function concert() {
 
 function spotifySong() {
     console.log("spotify is not yet implemented")
+    console.log(userSearch)
     // var queryUrl = "https://api.spotify.com/v1/search?q=" + userSearch + "&type=artist"
     // axios.get(queryUrl).then(
     //     function (response) {
@@ -75,10 +90,11 @@ function spotifySong() {
 }
 
 function movie() {
-    if(userSearch === ""){
+    if (userSearch === "") {
         userSearch = "mr+nobody";
     }
     var queryUrl = "http://www.omdbapi.com/?t=" + userSearch + "&apikey=trilogy";
+    console.log(queryUrl)
     axios.get(queryUrl).then(
         function (response) {
             // console.log(response.data);
@@ -95,5 +111,29 @@ function movie() {
 }
 
 function random() {
-    console.log("random is not yet implemented")
+    fs.readFile("random.txt", "utf8", function (error, data) {
+        if (error) {
+            return console.log(error);
+        }
+        var randomPosition = Math.floor(Math.random() * 3)//0, 1, 2
+        var position = randomPosition * 2;//0, 2, 4
+
+        var dataArr = data.split(",");
+
+        userRequest = dataArr[position]
+        userSearch = dataArr[position + 1]
+        userSearch = userSearch.slice(1, userSearch.length - 1)
+        userSearch = userSearch.replace(/ /gi, "+")
+        baseSwitch();
+    })
 }
+
+
+fs.appendFile("log.txt", "userRequest was " + userRequest + ",\n" + "userSearch was " + userSearch + ",\n", function(err) {
+  if (err) {
+    console.log(err);
+  }
+  else {
+    console.log("Content Added!");
+  }
+});
