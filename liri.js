@@ -19,13 +19,6 @@ function fixName(lowerName) {
     resultArtistName = artistName.join(" ");
 }
 
-
-function action(textToPrint) {
-    console.log(textToPrint)
-    fs.appendFile("log.txt", textToPrint + ",\n", function () { })
-}
-
-
 if (process.argv.length === 2) {
     console.log("enter 'concert-this' and a band/artist name to get information on their upcoming shows")
     console.log("enter 'spotify-this-song' and a song name to get information on it")
@@ -33,7 +26,24 @@ if (process.argv.length === 2) {
     console.log("enter 'do-what-it-says' for a surprise")
     console.log("no quotes are needed, and you may enter only the first command for a default result")
 
+} else if (userRequest === "html-this") {
+    fs.writeFile("index.html", "<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'><meta http-equiv='X-UA-Compatible' content='ie=edge'><title>Document</title></head><body>", function () { })
+    function action(textToPrint) {
+        fs.appendFile("index.html", "<p>" + textToPrint + "</p>", function () { })
+    }
+    userRequest = process.argv[3];
+    userSearch = process.argv.slice(4).join("+")
+    var htmlMode = true;
+    baseAction();
 } else {
+    function action(textToPrint) {
+        console.log(textToPrint)
+        fs.appendFile("log.txt", textToPrint + ",\n", function () { })
+    }
+    baseAction();
+}
+
+function baseAction() {
     fs.appendFile("log.txt", "user input was " + process.argv.slice(2).join(" ") + ",\n", function () { })
     action("------------------------------------------");
     baseSwitch();
@@ -140,4 +150,9 @@ function random() {
         userSearch = userSearch.replace(/ /gi, "+")
         baseSwitch();
     })
+}
+
+if (htmlMode) {
+    fs.appendFile("index.html", "</body></html>", function () { })
+    console.log("index.html successfully created. Open from folder")
 }
