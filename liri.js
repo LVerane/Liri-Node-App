@@ -22,7 +22,7 @@ function fixName(lowerName) {
 
 if (userRequest === "html-this") {
     function action(textToPrint) {
-        fs.appendFile("index.html", "<p>" + textToPrint + "</p>", function () { })
+        fs.appendFile("index.html", "<p>" + textToPrint + "</p>\n", function () { })
         fs.appendFile("log.txt", textToPrint + ",\n", function () { })
     }
 
@@ -66,7 +66,7 @@ function baseSwitch() {
             break;
 
         default:
-            console.log("This is not an artsy thing")
+            action("This is not an artsy thing")
             break;
     }
 }
@@ -84,7 +84,7 @@ function instructions() {
 }
 
 function html() {
-    fs.writeFile("index.html", "<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'><meta http-equiv='X-UA-Compatible' content='ie=edge'><title>Document</title></head><body>", function () { })
+    fs.writeFile("index.html", "<!DOCTYPE html>\n<html lang='en'>\n<head>\n<meta charset='UTF-8'>\n<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n<meta http-equiv='X-UA-Compatible' content='ie=edge'>\n<title>Result Page</title>\n</head>\n<body>\n", function () { })
     userRequest = process.argv[3];
     userSearch = process.argv.slice(4).join("+")
     htmlMode = true;
@@ -92,7 +92,7 @@ function html() {
 }
 
 function closeHtml() {
-    fs.appendFile("index.html", "</body></html>", function () { })
+    fs.appendFile("index.html", "</body>\n</html>", function () { })
     console.log("index.html successfully created. Open from folder")
 }
 
@@ -158,7 +158,6 @@ function movie() {
             action("Language: " + response.data.Language);
             action("Plot: " + response.data.Plot);
             action("Actors: " + response.data.Actors);
-            console.log(htmlMode)
             if (htmlMode) {
                 closeHtml()
             }
