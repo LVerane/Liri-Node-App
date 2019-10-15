@@ -19,35 +19,25 @@ function fixName(lowerName) {
     resultArtistName = artistName.join(" ");
 }
 
-if (process.argv.length === 2) {
-    console.log("enter 'concert-this' and a band/artist name to get information on their upcoming shows")
-    console.log("enter 'spotify-this-song' and a song name to get information on it")
-    console.log("enter 'movie-this' and a movie title to get information on it")
-    console.log("enter 'do-what-it-says' for a surprise")
-    console.log("no quotes are needed, and you may enter only the first command for a default result")
 
-} else if (userRequest === "html-this") {
-    fs.writeFile("index.html", "<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'><meta http-equiv='X-UA-Compatible' content='ie=edge'><title>Document</title></head><body>", function () { })
+if (userRequest === "html-this") {
     function action(textToPrint) {
         fs.appendFile("index.html", "<p>" + textToPrint + "</p>", function () { })
+        fs.appendFile("log.txt", textToPrint + ",\n", function () { })
     }
-    userRequest = process.argv[3];
-    userSearch = process.argv.slice(4).join("+")
-    var htmlMode = true;
-    baseAction();
+
 } else {
     function action(textToPrint) {
         console.log(textToPrint)
         fs.appendFile("log.txt", textToPrint + ",\n", function () { })
     }
-    baseAction();
 }
 
-function baseAction() {
-    fs.appendFile("log.txt", "user input was " + process.argv.slice(2).join(" ") + ",\n", function () { })
-    action("------------------------------------------");
-    baseSwitch();
-}
+fs.appendFile("log.txt", "user input was " + process.argv.slice(2).join(" ") + ",\n", function () { })
+action("------------------------------------------");
+baseSwitch();
+
+var htmlMode;
 
 function baseSwitch() {
     switch (userRequest) {
@@ -67,10 +57,43 @@ function baseSwitch() {
             random();
             break;
 
+        case "html-this":
+            html();
+            break;
+
+        case undefined:
+            instructions();
+            break;
+
         default:
             console.log("This is not an artsy thing")
             break;
     }
+}
+
+function instructions() {
+    action("Enter 'concert-this' and a band/artist name to get information on their upcoming shows")
+    action("Enter 'spotify-this-song' and a song name to get information on it")
+    action("Enter 'movie-this' and a movie title to get information on it")
+    action("Enter 'do-what-it-says' for a surprise")
+    action("No quotes are needed, and you may enter only the first command for a default result")
+    action("You may use 'html-this' before any other command to have the response be a html file you can open in the browser instead of console.logs")
+    if (htmlMode) {
+        closeHtml()
+    }
+}
+
+function html() {
+    fs.writeFile("index.html", "<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'><meta http-equiv='X-UA-Compatible' content='ie=edge'><title>Document</title></head><body>", function () { })
+    userRequest = process.argv[3];
+    userSearch = process.argv.slice(4).join("+")
+    htmlMode = true;
+    baseSwitch();
+}
+
+function closeHtml() {
+    fs.appendFile("index.html", "</body></html>", function () { })
+    console.log("index.html successfully created. Open from folder")
 }
 
 function concert() {
@@ -93,6 +116,9 @@ function concert() {
                 action("Date: " + moment(date).format("MM/DD/YYYY"))
                 action("------------------------------------------")
             }
+            if (htmlMode) {
+                closeHtml()
+            }
         }
     )
 }
@@ -105,13 +131,15 @@ function spotifySong() {
         if (err) {
             return action('Error occurred: ' + err);
         }
-        // console.log(data.tracks.items)        
         var inputName = data.tracks.items[0].artists[0].name
         fixName(inputName);
         action("Artist name: " + resultArtistName);
         action("Song name: " + data.tracks.items[0].name);
         action("Preview link: " + data.tracks.items[0].external_urls.spotify);
         action("Album: " + data.tracks.items[0].album.name);
+        if (htmlMode) {
+            closeHtml()
+        }
     });
 }
 
@@ -130,6 +158,10 @@ function movie() {
             action("Language: " + response.data.Language);
             action("Plot: " + response.data.Plot);
             action("Actors: " + response.data.Actors);
+            console.log(htmlMode)
+            if (htmlMode) {
+                closeHtml()
+            }
         }
     )
 }
@@ -150,9 +182,4 @@ function random() {
         userSearch = userSearch.replace(/ /gi, "+")
         baseSwitch();
     })
-}
-
-if (htmlMode) {
-    fs.appendFile("index.html", "</body></html>", function () { })
-    console.log("index.html successfully created. Open from folder")
 }
