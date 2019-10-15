@@ -2,11 +2,11 @@
 ### Liri searches Spotify for songs, Bands in Town for concerts, and OMDB for movies
 #
 ## Getting Started
-On the console, type 'npm install' and press enter\n
-You will need your own Spotify API key to run this app. To get one, sign up as a developer in https://developer.spotify.com/my-applications/#!/\n
-Create a .env file with your Spotify API key. It should be in the format\n
-SPOTIFY_ID=your-spotify-id\n
-SPOTIFY_SECRET=your-spotify-secret\n
+On the console, type 'npm install' and press enter\
+You will need your own Spotify API key to run this app. To get one, sign up as a developer in https://developer.spotify.com/my-applications/#!/\
+Create a .env file with your Spotify API key. It should be in the format\
+SPOTIFY_ID=your-spotify-id\
+SPOTIFY_SECRET=your-spotify-secret
 #
 ## How to Use
 |To search for/get:                                                   |Enter:                                                        |
@@ -18,7 +18,7 @@ SPOTIFY_SECRET=your-spotify-secret\n
 |Instructions in the console, enter only                              |node liri.js                                                  |
 |Any of the results as an html file instead of a console.log use      |node liri.js html-this (and then any other command you wish)  |
 #
-To get a predefined result enter only the first command, with no name/title to search for\n
+To get a predefined result enter only the first command, with no name/title to search for\
 No quotes are needed, but you are free to use them if you so wish
 #
 ## Technologies Used
@@ -73,7 +73,7 @@ Prints basic instructions on the console
 ![instructions](images/instructions.png)
 #
 ### node liri.js html-this
-Creates a functional index.html file and replaces all instances of console.log() from the default code with <p> tags on it. Just in case
+Creates a functional index.html file and replaces all instances of console.log() from the default code with < p > tags on it. Just in case
 you don't like the console. Be warned, that file is overwritten every time. If you care about your search history and results, look up the
 log.txt file.
 #
