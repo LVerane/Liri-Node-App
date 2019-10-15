@@ -1,6 +1,13 @@
 # Liri-Node-App
 ### Liri searches Spotify for songs, Bands in Town for concerts, and OMDB for movies
 #
+## Getting Started
+On the console, type 'npm install' and press enter\n
+You will need your own Spotify API key to run this app. To get one, sign up as a developer in https://developer.spotify.com/my-applications/#!/\n
+Create a .env file with your Spotify API key. It should be in the format\n
+SPOTIFY_ID=your-spotify-id\n
+SPOTIFY_SECRET=your-spotify-secret\n
+#
 ## How to Use
 |To search for/get:                                                   |Enter:                                                        |
 |---------------------------------------------------------------------|--------------------------------------------------------------|
@@ -11,8 +18,7 @@
 |Instructions in the console, enter only                              |node liri.js                                                  |
 |Any of the results as an html file instead of a console.log use      |node liri.js html-this (and then any other command you wish)  |
 #
-To get a predefined result enter only the first command, with no name/title to search for
-#
+To get a predefined result enter only the first command, with no name/title to search for\n
 No quotes are needed, but you are free to use them if you so wish
 #
 ## Technologies Used
